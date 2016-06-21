@@ -67,15 +67,39 @@ if ($fromform = $mform->get_data()) {
         // Remove header html.
         $additionalhtmlhead = preg_replace("/<!-- fcStart -->.*<!-- fcEnd -->/", "", $CFG->additionalhtmlhead);
         set_config('additionalhtmlhead', $additionalhtmlhead);
-        if(!empty($fromform->jqhandle)){
-            // Add header html.
-            $fstring = '<!-- fcStart --><script language = "JavaScript"> var wwwroot="'.$CFG->wwwroot.'/";</script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/bundle/jquery/jquery-ui.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/auth.php"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/bundle/io/build/iolib.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/build/chat.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/index.js"></script><!-- fcEnd -->';
-
-        }else{
-            // Add header html.
-            $fstring = '<!-- fcStart --><script language = "JavaScript"> var wwwroot="'.$CFG->wwwroot.'/";</script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/bundle/jquery/jquery-1.11.0.min.js"></script><script type="text/javascript">$=jQuery.noConflict( );</script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/bundle/jquery/jquery-ui.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/auth.php"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/bundle/io/build/iolib.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/build/chat.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/index.js"></script><!-- fcEnd -->';
-
-        }
+        
+//        $fstring = '<!-- fcStart --><script language = "JavaScript"> var wwwroot="'.$CFG->wwwroot.'/";</script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/bundle/jquery/jquery-ui.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/auth.php"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/bundle/io/build/iolib.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/build/chat.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/index.js"></script><!-- fcEnd -->';
+        
+// dont include        
+//         $fstring = '<!-- fcStart --><script language = "JavaScript"> var wwwroot="'.$CFG->wwwroot.'/";</script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/bundle/jquery/jquery-1.11.0.min.js"></script><script type="text/javascript">$=jQuery.noConflict( );</script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/bundle/jquery/jquery-ui.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/auth.php"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/bundle/io/build/iolib.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/build/chat.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/index.js"></script><!-- fcEnd -->';
+         
+        $fstring = '<!-- fcStart --><script language = "JavaScript"> var wwwroot="'.$CFG->wwwroot.'/";</script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/auth.php"></script><!-- fcEnd -->';
+        
+//        $fstring .= '<script type="text/javascript">
+//            window.onload = function (){
+//                 require([\'core/first\'], function() {
+//                    require(["local_vmchat/index"], function(amd) { amd.init("https:\/\/local.vidya.io\/moodle30\/"); });;
+//                });
+//            }
+//        </script>';
+        
+        
+        // we need url in this format 
+        // "https:\/\/local.vidya.io\/moodle30\/"
+        // We can not use addslashes() function as it does not work on forward slash
+        // If is there any inbuilt funciton is exist
+        $wwwrooturl = str_replace("/", "\/", $CFG->wwwroot.'/');
+        
+        $fstring .= '<script type="text/javascript">
+            window.onload = function (){
+                 require([\'core/first\'], function() {
+                    require(["local_vmchat/index"], function(amd) { amd.init("'.$wwwrooturl.'"); });;
+                });
+            }
+        </script>';
+        
+        
+        
         /*$DB->execute('UPDATE {config} set value = concat(value, :fstring) WHERE  name = :hname',
                 array( 'fstring' => $fstring, 'hname' => 'additionalhtmlhead'));*/
         $DB->execute('UPDATE {config} set value = ' . $DB->sql_concat('value', ':fstring')  . ' WHERE  name = :hname',
@@ -99,6 +123,16 @@ if ($fromform = $mform->get_data()) {
     purge_all_caches();
 }
 
+//$PAGE->requires->js_call_amd('local_vmchat/coloursswitcher', 'init');
+
+$PAGE->requires->js_call_amd('local_vmchat/jqueryui', 'init');
+$PAGE->requires->js_call_amd('local_vmchat/index', 'init', [$CFG->wwwroot.'/']);
+
+//$PAGE->requires->js_call_amd('local_vmchat/greeting', 'init');
+//$PAGE->requires->js_call_amd('local_vmchat/normal', 'init');
+
+
+
 echo $OUTPUT->header();
 
 // Api key exist in db.
@@ -112,4 +146,6 @@ if ($errormsg !== '') {
     echo $OUTPUT->notification($statusmsg, 'notifysuccess');
 }
 $mform->display();
+
+
 echo $OUTPUT->footer();

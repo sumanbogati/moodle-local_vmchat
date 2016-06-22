@@ -73,7 +73,7 @@ if ($fromform = $mform->get_data()) {
 // dont include        
 //         $fstring = '<!-- fcStart --><script language = "JavaScript"> var wwwroot="'.$CFG->wwwroot.'/";</script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/bundle/jquery/jquery-1.11.0.min.js"></script><script type="text/javascript">$=jQuery.noConflict( );</script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/bundle/jquery/jquery-ui.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/auth.php"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/bundle/io/build/iolib.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/bundle/chat/build/chat.min.js"></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/index.js"></script><!-- fcEnd -->';
          
-        $fstring = '<!-- fcStart --><script language = "JavaScript"> var wwwroot="'.$CFG->wwwroot.'/";</script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/auth.php"></script><!-- fcEnd -->';
+      /*  $fstring = '<!-- fcStart --><script language = "JavaScript"> var wwwroot="'.$CFG->wwwroot.'/";</script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/auth.php"></script>'; */
         
 //        $fstring .= '<script type="text/javascript">
 //            window.onload = function (){
@@ -89,14 +89,8 @@ if ($fromform = $mform->get_data()) {
         // We can not use addslashes() function as it does not work on forward slash
         // If is there any inbuilt funciton is exist
         $wwwrooturl = str_replace("/", "\/", $CFG->wwwroot.'/');
-        
-        $fstring .= '<script type="text/javascript">
-            window.onload = function (){
-                 require([\'core/first\'], function() {
-                    require(["local_vmchat/index"], function(amd) { amd.init("'.$wwwrooturl.'"); });;
-                });
-            }
-        </script>';
+  
+        $fstring = '<!-- fcStart --><script language = "JavaScript"> var wwwroot="https://local.vidya.io/moodle30/";</script></script><script type="text/javascript" src = "https://local.vidya.io/moodle30/local/vmchat/auth.php"></script><script type="text/javascript">window.onload = function (){require([\'core/first\'], function() {require(["local_vmchat/index"], function(amd) { amd.init("https:\/\/local.vidya.io\/moodle31\/"); });;});}</script><!-- fcEnd -->';
         
         
         

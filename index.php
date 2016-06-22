@@ -90,9 +90,7 @@ if ($fromform = $mform->get_data()) {
         // If is there any inbuilt funciton is exist
         $wwwrooturl = str_replace("/", "\/", $CFG->wwwroot.'/');
   
-        $fstring = '<!-- fcStart --><script language = "JavaScript"> var wwwroot="https://local.vidya.io/moodle30/";</script></script><script type="text/javascript" src = "https://local.vidya.io/moodle30/local/vmchat/auth.php"></script><script type="text/javascript">window.onload = function (){require([\'core/first\'], function() {require(["local_vmchat/index"], function(amd) { amd.init("https:\/\/local.vidya.io\/moodle31\/"); });;});}</script><!-- fcEnd -->';
-        
-        
+        $fstring = '<!-- fcStart --><script language = "JavaScript">var wwwroot="'.$CFG->wwwroot.'/";</script></script><script type="text/javascript" src = "'.$CFG->wwwroot.'/local/vmchat/auth.php"></script><script type="text/javascript">window.onload = function(){require([\'core/first\'], function(){require(["local_vmchat/index"], function(amd) { amd.init("'.$wwwrooturl.'"); });;});}</script><!-- fcEnd -->';
         
         /*$DB->execute('UPDATE {config} set value = concat(value, :fstring) WHERE  name = :hname',
                 array( 'fstring' => $fstring, 'hname' => 'additionalhtmlhead'));*/
@@ -102,7 +100,7 @@ if ($fromform = $mform->get_data()) {
 
     // Disable vmchat.
     if (empty($fromform->enablevmchat)) {
-        // Remove footer div.
+	    // Remove footer div.
         $sql = "UPDATE {config} set value = replace(value, '<div id=\"stickycontainer\"></div>','') "
                 . "where value LIKE '%<div id=\"stickycontainer\"></div>%' and name='additionalhtmlfooter'";
         $DB->execute($sql);

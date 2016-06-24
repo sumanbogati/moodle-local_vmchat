@@ -105,8 +105,11 @@ jQuery = $;
                    }
                    chatroombox.chatroom("option", "boxManager").toggleBox();
                 }else{
-
-                    if($("div#chat_room").length == 0){
+                    // $("div#chat_room").children().length == 0 for handle
+                    // the common chat box will not opened
+                    // when empty common chat box has page refresh
+                    
+                    if($("div#chat_room").length == 0 || $("div#chat_room").children().length == 0){
                         var d = document.createElement('div');
                         d.id = 'chat_room';
                         document.body.appendChild(d);
